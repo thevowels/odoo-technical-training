@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-
+from odoo.exceptions import UserError
 class Estate(models.Model):
     _name = "estate.property"
     _description = "Estate property Description"
@@ -23,10 +23,10 @@ class Estate(models.Model):
     state = fields.Selection(
         selection = [ ('new','New'), ('received', 'Offer Received'), ('accepted', 'Offer Accepted'), ('sold','Sold'),('canceled','Canceled')],
         copy=False,
-        default='new'
+        default='new',
+        readonly=True
     )
     active = fields.Boolean(default=True)
-
     property_type_id = fields.Many2one("estate.property.type", string="Property Type")
 # Add a state field to the estate.property model. Five values are possible: New, Offer Received, Offer Accepted, Sold and Canceled. It must be required, should not be copied and should have its default value set to ‘New’.
 #
@@ -59,7 +59,8 @@ class Estate(models.Model):
             # if record.offer_ids.mapped('price'):
             record.best_price = max(record.offer_ids.mapped('price') or [0])
 
-# Compute fields and Onchanges
+
+    # Compute fields and Onchanges
 
     @api.onchange("garden")
     def _onchange_garden(self):
@@ -68,7 +69,28 @@ class Estate(models.Model):
                 record.garden_area = 10
                 record.garden_orientation = 'North'
 
-                
+
             else:
                 record.garden_area = None
                 record.garden_orientation = None
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
+
+    def sold_action(self):
+        for record in self:
+            if record.state == "canceled":
+                raise UserError("Cancelled properties can\'t be Sold")
+            else:
+                record.state = "sold"
+
+        return True
+
+    def cancel_action(self):
+        for record in self:
+            if record.state =="sold":
+                raise UserError("Sold properties can\'t be cancelled")
+            else:
+                record.state = "canceled"
+        return True
