@@ -45,6 +45,13 @@ class Estate(models.Model):
     # Local dependence
     total_area = fields.Integer(compute="_compute_area")
 
+
+
+    _sql_constraints = [
+        ('name_unique', 'UNIQUE(name)', 'Properties need to have unique names'),
+        ('expected_price_positive', 'CHECK(expected_price >= 0)', 'Expected price need to be positive'),
+        ('selling_price_positive', 'CHECK(selling_price >= 0)', 'Selling price must be positive')
+    ]
     @api.depends("living_area","garden_area")
     def _compute_area(self):
         for record in self:
