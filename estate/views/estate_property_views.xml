@@ -32,12 +32,14 @@
                 <header>
                     <button name="sold_action" type="object" string="Sold"/>
                     <button name="cancel_action" type="object" string="Cancel"/>
+                    <field name="state" string="status" widget="statusbar" statusbar_visible="new,received,accepted,sold"/>
+
                 </header>
                 <sheet>
+
                     <h1><field name="name"/></h1>
                     <group col="5">
                         <group colspan="2">
-                            <field name="state" string="status"/>
                             <field name="tag_ids" widget="many2many_tags"/>
                             <field name="postcode" />
                             <field name="date_availability" string="Available From"/>
