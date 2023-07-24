@@ -10,8 +10,7 @@
                 <field name="postcode"/>
                 <field name="expected_price"/>
                 <field name="bedrooms"/>
-                <field name="living_area" string="Living Area (sqm)"
-                    filter_domain="[('living_area','>=', self)]"/>
+                <field name="living_area" string="Living Area (sqm)"/>
                 <field name="facades"/>
                 <separator/>
                 <filter string="Include archived" name="archived" domain="['|', ('active', '=', True), ('active', '=', False)]"/>
@@ -72,7 +71,7 @@
                         </page>
                         <page string="Offers">
                             <group>
-                                <field name="offer_ids" attrs="{'readonly': [('state','in' , ['accepted','sold','canceled'])]}" />
+                                <field name="offer_ids" attrs="{'readonly': [('state','in' , ['accepted','sold','canceled'])]}"/>
                             </group>
                         </page>
                         <page string="Other Info">
@@ -91,17 +90,15 @@
         <field name="name">estate.property.tree</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <tree string="Channel" decoration-success="state in ['accepted','received']" decoration-bf="state == 'accepted'" decoration-muted="state == 'sold'" >
-                <field name="state" invisible="1"/>
+            <tree string="Channel">
                 <field name="name" string="Title"/>
-                <field name="property_type_id" options="{'no_create':true}"/>
                 <field name="postcode"/>
-                <field name="tag_ids" widget="many2many_tags" options="{'no_create':true , 'color_field': 'color', 'no_edit_color': true}"/>
                 <field name="bedrooms"/>
                 <field name="living_area"/>
                 <field name="expected_price"/>
                 <field name="selling_price"/>
-                <field name="date_availability" string="Available From" optional="True"/>
+                <field name="property_type_id" options="{'no_create':true}"/>
+                <field name="date_availability" string="Available From"/>
             </tree>
         </field>
     </record>
@@ -110,7 +107,6 @@
         <field name="name">Estate Property</field>
         <field name="res_model">estate.property</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_available':True}</field>
         <field name="help" type="html">
           <p>
             Define new property
