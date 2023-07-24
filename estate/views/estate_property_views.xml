@@ -30,8 +30,8 @@
         <field name="arch" type="xml">
             <form string="Property">
                 <header>
-                    <button name="sold_action" type="object" string="Sold" states="new,received,accepted"/>
-                    <button name="cancel_action" type="object" string="Cancel" states="new,received,accepted"/>
+                    <button name="sold_action" type="object" string="Sold"/>
+                    <button name="cancel_action" type="object" string="Cancel"/>
                     <field name="state" string="status" widget="statusbar" statusbar_visible="new,received,accepted,sold"/>
 
                 </header>
@@ -40,10 +40,10 @@
                     <h1><field name="name"/></h1>
                     <group col="5">
                         <group colspan="2">
-                            <field name="tag_ids" widget="many2many_tags" options="{'no_create':true , 'color_field': 'color', 'no_edit_color': true}"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
                             <field name="postcode" />
                             <field name="date_availability" string="Available From"/>
-                            <field name="property_type_id" options="{'no_create':true}"/>
+                            <field name="property_type_id"/>
                         </group>
                         <div></div>
                         <group colspan="2">
@@ -63,15 +63,15 @@
                                 <field name="facades"/>
                                 <field name="garage"/>
                                 <field name="garden"/>
-                                <field name="garden_area" attrs="{'invisible': [('garden','=',False)]}"/>
+                                <field name="garden_area"/>
                                 <field name="total_area" string="Total Area (sqm)"/>
-                                <field name="garden_orientation" attrs="{'invisible': [('garden','=',False)]}" />
+                                <field name="garden_orientation"/>
                                 <field name="active"/>
                             </group>
                         </page>
                         <page string="Offers">
                             <group>
-                                <field name="offer_ids" attrs="{'readonly': [('state','in' , ['accepted','sold','canceled'])]}"/>
+                                <field name="offer_ids"/>
                             </group>
                         </page>
                         <page string="Other Info">
@@ -97,7 +97,7 @@
                 <field name="living_area"/>
                 <field name="expected_price"/>
                 <field name="selling_price"/>
-                <field name="property_type_id" options="{'no_create':true}"/>
+                <field name="property_type_id"/>
                 <field name="date_availability" string="Available From"/>
             </tree>
         </field>
