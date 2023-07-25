@@ -14,26 +14,38 @@
         <field name="name">estate.property.type.tree</field>
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
-            <tree string="Types">
+            <tree string="Property types">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
             </tree>
         </field>
     </record>
+
     <record id="estate_property_type_view_form" model="ir.ui.view">
         <field name="name">estate.property.type.form</field>
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
             <form String="Property Types">
                 <sheet>
-                        <field name="name"/>
-                        <field name="property_ids">
-                            <tree>
-                                <field name="name"/>
-                                <field name="expected_price"/>
-                                <field name="state"/>
-                            </tree>
-                        </field>
+                    <field name="name"/>
+                    <field name="offer_count"/>
+                    <separator/>
+                    <separator/>
+                    <notebook>
+                        <page string="Properties">
+                            <field name="property_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="expected_price"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="offers">
+                            <field name="offer_ids"/>
+                        </page>
+                    </notebook>
+
                 </sheet>
             </form>
         </field>
