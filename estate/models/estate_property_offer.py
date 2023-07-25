@@ -1,5 +1,6 @@
 from odoo import api,fields, models
 from odoo.tools import date_utils
+from odoo.exceptions import UserError
 class EstateOffer(models.Model):
     _name="estate.property.offer"
     _description = "Estate Property Offers"
@@ -54,3 +55,12 @@ class EstateOffer(models.Model):
         for record in self:
             record.status="refused"
         return True
+
+    @api.model
+    def create(self, vals):
+        cur_max = self.env['estate.property'].browse(vals['property_id']).best_price or 0
+        if vals['price'] < cur_max:
+            raise UserError("You can't create an offer lower than the max offer")
+        if (self.env['estate.property'].browse(vals['property_id']).state == 'new'):
+            self.env['estate.property'].browse(vals['property_id']).state="received"
+        return super().create(vals)

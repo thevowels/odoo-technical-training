@@ -110,3 +110,10 @@ class Estate(models.Model):
             else:
                 record.state = "canceled"
         return True
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_new_or_cancelled(self):
+        for record in self:
+            if (record.state not in ['new','cancelled']):
+                raise UserError("You can delete only New or Cancelled properties!")
+
