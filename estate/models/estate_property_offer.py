@@ -3,6 +3,7 @@ from odoo.tools import date_utils
 class EstateOffer(models.Model):
     _name="estate.property.offer"
     _description = "Estate Property Offers"
+    _order = "price desc"
 
     price = fields.Float(default=50000)
     status = fields.Selection(
