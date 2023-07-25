@@ -90,7 +90,8 @@
         <field name="name">estate.property.tree</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <tree string="Channel">
+            <tree string="Channel" decoration-success="state in ['received','accepted']" decoration-muted="state == 'sold'" decoration-bf="state == 'accepted'">
+                <field name="state" invisible="1"/>
                 <field name="name" string="Title"/>
                 <field name="postcode"/>
                 <field name="bedrooms"/>
@@ -98,7 +99,7 @@
                 <field name="expected_price"/>
                 <field name="selling_price"/>
                 <field name="property_type_id"/>
-                <field name="date_availability" string="Available From"/>
+                <field name="date_availability" string="Available From" invisible="1"/>
             </tree>
         </field>
     </record>
