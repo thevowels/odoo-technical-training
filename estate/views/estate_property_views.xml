@@ -10,7 +10,7 @@
                 <field name="postcode"/>
                 <field name="expected_price"/>
                 <field name="bedrooms"/>
-                <field name="living_area" string="Living Area (sqm)"/>
+                <field name="living_area" string="Living Area (sqm)" filter_domain="[('living_area','>=',self)]"/>
                 <field name="facades"/>
                 <separator/>
                 <filter string="Include archived" name="archived" domain="['|', ('active', '=', True), ('active', '=', False)]"/>
@@ -108,6 +108,7 @@
         <field name="name">Estate Property</field>
         <field name="res_model">estate.property</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_available':True}</field>
         <field name="help" type="html">
           <p>
             Define new property
