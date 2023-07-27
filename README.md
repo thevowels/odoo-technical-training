@@ -5,3 +5,4 @@ The Technical Training of Odoo 16.0 is available on the
 
 This is edited by me, aph...
 ================================
+# Finished
