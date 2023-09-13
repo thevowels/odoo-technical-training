@@ -4,7 +4,7 @@
         <field name="res_model">estate.property</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <record id="Estate_model_search" model="ir.ui.view">
+    <record id="Estate_model_view_search" model="ir.ui.view">
         <field name="name">estate.property.search</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
@@ -17,9 +17,8 @@
                 <field name="facades"/>
                 <separator/>
                 <filter string="Available" name="available" domain="[('state','in',['new','received'])]"/>
-                <separator/>
-                <group expand="1" string="GroupBy">
-                    <filter string="Postcode" context="{'group_by':'postcode','residual_visible':True}"/>
+                <group expand="1" string="Group By">
+                    <filter string="Postcode" name="postcode" context="{'group_by':'postcode','residual_visible':True}"/>
                 </group>
             </search>
         </field>
@@ -47,8 +46,11 @@
             <form string="Property">
                 <sheet>
                     <h1><field name="name"/></h1>
+                    <field name="tag_ids" widget="many2many_tags"/>
+                    <separator/>
                     <group>
                         <group>
+                            <field name="type_id"/>
                             <field name="postcode"/>
                             <field name="date_availability"/>
                         </group>
@@ -69,6 +71,15 @@
                                     <field name="garden_area"/>
                                     <field name="garden_orientation"/>
                                     <field name="state"/>
+                                </group>
+                            </page>
+                            <page string="Offers">
+                                <field name="offer_ids"/>
+                            </page>
+                            <page string="Other Info">
+                                <group>
+                                    <field name="user_id"/>
+                                    <field name="partner_id"/>
                                 </group>
                             </page>
                         </notebook>

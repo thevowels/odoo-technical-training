@@ -3,5 +3,9 @@
         <menuitem id="Estate_first_level" name="Advertisements">
             <menuitem id="Estate_model_menu_action" action="Estate_model_action"/>
         </menuitem>
+        <menuitem id="Estate_settings" name="Settings">
+            <menuitem id="Estate_type_menu_action" action="Estate_type_action"/>
+            <menuitem id="Estate_tag_menu_action" action ="Estate_tag_action"/>
+        </menuitem>
     </menuitem>
 </odoo>
