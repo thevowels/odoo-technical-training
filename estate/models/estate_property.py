@@ -1,9 +1,11 @@
 from odoo import api, fields, models
-from odoo.tools import date_utils
-from odoo.exceptions import UserError
+from odoo.tools import date_utils, float_utils
+from odoo.exceptions import UserError, ValidationError
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Model for estate property"
+
+    _sql_constraints=[('check_prices','CHECK(expected_price>=0 and selling_price>=0)','Expected and Selling Prices need to be positive')]
 
     active = fields.Boolean(default=True)
 
@@ -83,9 +85,19 @@ class EstateProperty(models.Model):
                 raise UserError("Sold properties can't be cancelled.")
 
         return True
+
+
+    @api.constrains('selling_price')
+    def _check_selling_price(self):
+        for record in self:
+            if float_utils.float_compare(record.selling_price, (record.expected_price * 0.9),precision_digits=3) == -1:
+                raise ValidationError('Selling Price must be at least 90% of expected_price')
+
 class EstatePropertyType(models.Model):
     _name = "estate.property.type"
     _description = "Estate Property Type"
+
+    _sql_constraints=[('unique_type_name','UNIQUE(name)','Property Types need to have unique names')]
 
     name = fields.Char(required=True)
 
@@ -93,11 +105,15 @@ class EstatePropertyTag(models.Model):
     _name = "estate.property.tag"
     _description = "Estate Property Tags"
 
+    _sql_constraints = [('unique_tag_name', 'UNIQUE(name)', 'Property Tag names need to be unique')]
+
     name = fields.Char(required=True)
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
     _description = "Estate Property Offers"
+
+    _sql_constraints = [('check_price', 'CHECK (price >= 0)','Offers need to have a positive price.')]
 
     price = fields.Float()
     status = fields.Selection(
@@ -143,3 +159,10 @@ class EstatePropertyOffer(models.Model):
                 record.status = 'refused'
 
         return True
+
+    @api.constrains('date_deadline')
+    def _check_date_deadline(self):
+        for record in self:
+            if record.date_deadline < fields.Date.today():
+                raise ValidationError("The deadline cannot be set in the past.")
+
