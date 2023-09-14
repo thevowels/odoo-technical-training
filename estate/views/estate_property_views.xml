@@ -44,6 +44,10 @@
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <form string="Property">
+                <header>
+                    <button name="sold" type="object" string="Sold"/>
+                    <button name="cancel" type="object" string="Cancel"/>
+                </header>
                 <sheet>
                     <h1><field name="name"/></h1>
                     <field name="tag_ids" widget="many2many_tags"/>
@@ -79,14 +83,13 @@
                             </page>
                             <page string="Other Info">
                                 <group>
-                                    <field name="user_id"/>
-                                    <field name="partner_id"/>
+                                    <field name="user_id" readonly="True"/>
+                                    <field name="partner_id" readonly="True"/>
                                 </group>
                             </page>
                         </notebook>
                     </group>
                 </sheet>
-
             </form>
         </field>
     </record>

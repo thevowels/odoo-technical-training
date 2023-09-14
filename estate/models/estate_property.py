@@ -1,6 +1,6 @@
 from odoo import api, fields, models
-from  odoo.tools import date_utils
-
+from odoo.tools import date_utils
+from odoo.exceptions import UserError
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Model for estate property"
@@ -67,6 +67,22 @@ class EstateProperty(models.Model):
             self.garden_area = 0
             self.garden_orientation = None
 
+    def sold(self):
+        for record in self:
+            if record.state != 'cancelled':
+                record.state = 'sold'
+            else:
+                raise UserError("Cancelled properties can't be sold.")
+        return True
+
+    def cancel(self):
+        for record in self:
+            if record.state != 'sold':
+                record.state = 'cancelled'
+            else:
+                raise UserError("Sold properties can't be cancelled.")
+
+        return True
 class EstatePropertyType(models.Model):
     _name = "estate.property.type"
     _description = "Estate Property Type"
@@ -106,3 +122,24 @@ class EstatePropertyOffer(models.Model):
     def _inverse_deadline(self):
         for record in self:
             record.validity = (record.date_deadline - fields.Date.to_date(record.create_date or fields.Date.today())).days
+
+
+    def action_accept(self):
+        for record in self:
+            if record.status == 'refused':
+                raise UserError('Refused offer')
+            else:
+                record.status = 'accepted'
+                record.property_id.partner_id = record.partner_id
+                record.property_id.selling_price = record.price
+
+        return True
+
+    def action_refuse(self):
+        for record in self:
+            if record.status == 'accepted':
+                raise UserError('Accepted Offer')
+            else:
+                record.status = 'refused'
+
+        return True
