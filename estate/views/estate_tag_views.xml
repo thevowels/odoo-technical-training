@@ -5,4 +5,17 @@
         <field name="res_model">estate.property.tag</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+    <record id="Estate_tag_view_tree" model="ir.ui.view">
+        <field name="name">estate.property.tag.tree</field>
+        <field name="model">estate.property.tag</field>
+        <field name="arch" type="xml">
+            <form>
+                <tree string="Channel" editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </form>
+        </field>
+    </record>
+
 </odoo>

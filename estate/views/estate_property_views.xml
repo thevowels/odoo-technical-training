@@ -3,17 +3,19 @@
         <field name="name">Properties</field>
         <field name="res_model">estate.property</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_available':True}</field>
     </record>
     <record id="Estate_model_view_search" model="ir.ui.view">
         <field name="name">estate.property.search</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <search string="Estate Property">
-                <field name="name" string="Title"/>
+                <field name="name" />
                 <field name="postcode"/>
                 <field name="expected_price"/>
                 <field name="bedrooms"/>
-                <field name="living_area"/>
+                <field name="living_area" string="Living Area(sqm)"
+                    filter_domain="[('living_area','>',self)]"/>
                 <field name="facades"/>
                 <separator/>
                 <filter string="Available" name="available" domain="[('state','in',['new','received'])]"/>
@@ -27,14 +29,16 @@
         <field name="name">estate.property.tree</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <tree string="Channel">
-                <field name="name"/>
+            <tree string="Channel" decoration-success="state in ('accepted','received')" decoration-bf="state in ('accepted')" decoration-muted="state == 'sold'" >
+                <field name="name" string="Title"/>
                 <field name="postcode"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'no_create':True,'color_field': 'color'}"/>
                 <field name="bedrooms"/>
                 <field name="living_area"/>
                 <field name="expected_price"/>
                 <field name="selling_price"/>
-                <field name="date_availability"/>
+                <field name="date_availability" optional="True"/>
+                <field name="state" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -45,16 +49,17 @@
         <field name="arch" type="xml">
             <form string="Property">
                 <header>
+                    <field name="state" widget="statusbar"/>
                     <button name="sold" type="object" string="Sold"/>
                     <button name="cancel" type="object" string="Cancel"/>
                 </header>
                 <sheet>
                     <h1><field name="name"/></h1>
-                    <field name="tag_ids" widget="many2many_tags"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'no_create':True,'color_field': 'color'}"/>
                     <separator/>
                     <group>
                         <group>
-                            <field name="type_id"/>
+                            <field name="type_id" options="{'no_create':True,'no_open':True}"/>
                             <field name="postcode"/>
                             <field name="date_availability"/>
                         </group>
@@ -72,14 +77,14 @@
                                     <field name="facades"/>
                                     <field name="garage"/>
                                     <field name="garden"/>
-                                    <field name="garden_area"/>
-                                    <field name="garden_orientation"/>
+                                    <field name="garden_area" attrs="{'invisible':[('garden','=',False)]}"/>
+                                    <field name="garden_orientation" attrs="{'invisible':[('garden','=',False)]}"/>
                                     <field name="state"/>
                                     <field name="total_area"/>
                                 </group>
                             </page>
                             <page string="Offers">
-                                <field name="offer_ids"/>
+                                <field name="offer_ids" attrs="{'readonly':[('state','in',['accepted','sold','cancelled'])]}"/>
                             </page>
                             <page string="Other Info">
                                 <group>
