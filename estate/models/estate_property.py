@@ -90,8 +90,20 @@ class EstateProperty(models.Model):
     @api.constrains('selling_price')
     def _check_selling_price(self):
         for record in self:
-            if float_utils.float_compare(record.selling_price, (record.expected_price * 0.9),precision_digits=3) == -1:
+            if float_utils.float_compare(record.selling_price, (record.expected_price * 0.9), precision_digits=3) == -1:
                 raise ValidationError('Selling Price must be at least 90% of expected_price')
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_cancel_or_new(self):
+        # for record in self:
+        #     if record.state not in ['new','cancelled']:
+        #         raise UserError('You can delete only new or cancelled records')
+        #
+        if any((record.state not in ['new','cancelled']) for record in self):
+            raise UserError('You can delete only new or cancelled records')
+
+
+
 
 class EstatePropertyType(models.Model):
     _name = "estate.property.type"
@@ -177,3 +189,12 @@ class EstatePropertyOffer(models.Model):
             if record.date_deadline < fields.Date.today():
                 raise ValidationError("The deadline cannot be set in the past.")
 
+
+    @api.model
+    def create(self, vals):
+        lowest_offer = max(self.env['estate.property'].browse(vals['property_id']).offer_ids.mapped('price') or [0])
+        if vals['price'] < lowest_offer:
+            raise UserError('You cannot create offers lower than existing offer')
+        self.env['estate.property'].browse(vals['property_id']).state = 'received'
+
+        return super().create(vals)
