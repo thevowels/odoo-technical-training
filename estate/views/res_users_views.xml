@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page string="Real Estate Properties">
-                    <field name="property_ids" domain="[('state','=', 'sold')]"/>
+                    <field name="property_ids" domain="[('state', 'not in', ('sold','cancelled'))]"/>
                 </page>
             </notebook>
         </field>
